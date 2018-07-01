@@ -161,11 +161,16 @@ class WebSocket(object):
             self._state = "headers"
 
         if self._state == "headers":
-            self._key = ''
-            for i in range(16):
-                self._key += chr(random.randrange(256))
-            if sys.hexversion >= 0x3000000:
-                self._key = bytes(self._key, "latin-1")
+            print("session id: %s", self.sessionid)
+            if self.sessionid is None:
+                self._key = ''
+                for i in range(16):
+                    self._key += chr(random.randrange(256))
+                if sys.hexversion >= 0x3000000:
+                    self._key = bytes(self._key, "latin-1")
+            else:
+                self._key = self.sessionid
+                
             self._key = b64encode(self._key).decode("ascii")
 
             path = uri.path

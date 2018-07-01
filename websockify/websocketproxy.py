@@ -257,7 +257,8 @@ class WebSocketProxy(websockifyserver.WebSockifyServer):
         self.unix_target    = kwargs.pop('unix_target', None)
         self.ssl_target     = kwargs.pop('ssl_target', None)
         self.heartbeat      = kwargs.pop('heartbeat', None)
-
+        self.sessionid      = kwargs.pop('sessionid', None)
+        
         self.token_plugin = kwargs.pop('token_plugin', None)
         self.auth_plugin = kwargs.pop('auth_plugin', None)
 
@@ -454,6 +455,8 @@ def websockify_init():
                            "on instantiation")
     parser.add_option("--heartbeat", type=int, default=0,
             help="send a ping to the client every HEARTBEAT seconds")
+    parser.add_option("--sessionid", default=None,
+            help="session id to be used as Sec-WebSocket-Key to identify multiple sessions")
     parser.add_option("--log-file", metavar="FILE",
             dest="log_file",
             help="File where logs will be saved")
@@ -599,11 +602,12 @@ class LibProxyServer(ForkingMixIn, HTTPServer):
         self.token_plugin   = kwargs.pop('token_plugin', None)
         self.auth_plugin    = kwargs.pop('auth_plugin', None)
         self.heartbeat      = kwargs.pop('heartbeat', None)
+        self.sessionid      = kwargs.pop('sessionid', None)
 
         self.token_plugin = None
         self.auth_plugin = None
         self.daemon = False
-
+        
         # Server configuration
         listen_host    = kwargs.pop('listen_host', '')
         listen_port    = kwargs.pop('listen_port', None)
